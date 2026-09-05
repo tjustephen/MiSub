@@ -4,6 +4,7 @@ import './assets/main.css'
 import App from './App.vue'
 import router from './router'
 import { handleError, setToastHandler, configureErrorMonitoring } from './utils/errorHandler.js'
+import { i18n } from './i18n/index.js'
 import { useToastStore } from './stores/toast.js'
 
 // 全局错误处理
@@ -65,7 +66,6 @@ if (typeof window !== 'undefined') {
 
     markAssetReloaded();
     try {
-      // PWA disabled: skip service worker cleanup
       if ('caches' in window) {
         const cacheKeys = await caches.keys();
         await Promise.all(cacheKeys.map((key) => caches.delete(key)));
@@ -134,6 +134,7 @@ app.config.errorHandler = (error, instance, info) => {
 };
 
 app.use(pinia)
+app.use(i18n)
 const toastStore = useToastStore(pinia)
 setToastHandler(toastStore.showToast)
 configureErrorMonitoring({ endpoint: import.meta.env.VITE_ERROR_REPORT_URL })
